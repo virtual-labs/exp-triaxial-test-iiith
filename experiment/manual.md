@@ -1,6 +1,4 @@
-Observation Table:
-
-Procedure for the experiment is as follows.
+**Observation Table:**
 
 <img src="images/observation_table.JPG">
 
