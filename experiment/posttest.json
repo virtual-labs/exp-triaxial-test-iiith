@@ -1,18 +1,39 @@
-[
-{"question":"This is a Sample Question 1?",
-"answers":{
-            "a":"answer1",
-            "b":"answer2",
-            "c":"answer3",
-            "d":"answer4"
-          },
-"correctAnswer":"a"},
-{"question":"This is a Sample Question 2?",
-"answers":{
-            "a":"answer1",
-            "b":"answer2",
-            "c":"answer3",
-            "d":"answer4"
-          },
-"correctAnswer":"c"} 
-]
+{
+	"version": 2.0,
+	"questions": [
+		{
+			"question": "1. A clay soil sample is tested in a triaxial apparatus in consolidated drained conditions at a cell pressure of 100 kN/m<sup>2</sup>. What will be the pore water pressure at a deviator stress of 40 kN/m<sup>2</sup>? ",
+			"answers": {
+				"a": "0 kN/m<sup>2</sup>",
+				"b": "20 kN/m<sup>2</sup>",
+				"c": "40 kN/m<sup>2</sup>",
+				"d": "60 kN/m<sup>2</sup>"
+			},
+			"explanations": {
+				"a": "In consolidated and drained conditions pore pressure is zero.",
+				"b": "In consolidated and drained conditions pore pressure is zero.",
+				"c": "In consolidated and drained conditions pore pressure is zero.",
+				"d": "In consolidated and drained conditions pore pressure is zero."
+			},
+			"difficulty": "advanced",
+			"correctAnswer": "a"
+		},
+		{
+			"question": "2. A conventional drained triaxial compression test was conducted on a normally consolidated clay sample under an effective confining pressure of 200 kPa. The deviator stress at failure was found to be 400 kPa. An identical specimen of the same clay sample is isotropically consolidated to a confining pressure of 200 kPa and subjected to standard undrained triaxial compression test. If the deviator stress at failure is 150 kPa, the pore pressure developed in kPa is ____.",
+			"answers": {
+				"a": "0",
+				"b": "1",
+				"c": "1.25",
+				"d": "1.5"
+			},
+			"explanations": {
+				"a": "",
+				"b": "",
+				"c": "",
+				"d": ""
+			},
+			"difficulty": "advanced",
+			"correctAnswer": "c"
+		}
+	]
+}

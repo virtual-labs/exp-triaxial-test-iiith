@@ -1,1 +1,3 @@
-### Link your references in here
+- []()
+- []()
+- Soil Mechanics Laboratory Manual, Braja M. Das
