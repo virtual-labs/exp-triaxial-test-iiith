@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	};
 
 	function canvas_arrow(ctx, fromx, fromy, tox, toy) {
-		const headlen = 10, dx = tox - fromx, dy = toy - fromy, angle = Math.atan2(dy, dx);
+		const headlen = 5, dx = tox - fromx, dy = toy - fromy, angle = Math.atan2(dy, dx);
 		ctx.moveTo(fromx, fromy);
 		ctx.lineTo(tox, toy);
 		ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
@@ -151,76 +151,77 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 	};
 
-	class shearDevice {
+	class loader {
 		constructor(height, width, radius, x, y) {
 			this.height = height;
 			this.width = width;
 			this.pos = [x, y];
+			this.marginHoriz = 0.05 * this.height;
+			this.cylStart = 0.4 * this.height;
 			this.radius = radius;
 			this.angle = 0;
-			this.baseStart = 0.8 * this.width;
-			this.endMargin = 0.1 * this.width; 
+			this.drains = false;
+			this.arrows = false;
 		};
 
 		draw(ctx) {
-			const boxWidth = 0.1 * this.width, pipeWidth = 0.1 * this.height, baseWidth = 0.025 * this.width, lastSeg  = 0.25 * this.width;
+			const marginVert = 0.1 * this.width, heightVert = 0.90 * this.height, widthVert = 0.05 * this.width, heightHoriz = 0.05 * this.height, gaugeCenterY = 0.25 * this.height, baseWidth = 0.6 * this.width, baseHeight = 0.05 * this.height, pipeWidth = 0.025 * this.width, arrowPad = 10, arrowGap = 20;
+			ctx.fillStyle = data.colors.gray;
+
+			ctx.beginPath();
+			ctx.rect(this.pos[0] + marginVert, this.pos[1], widthVert, heightVert);
+			ctx.rect(this.pos[0] + this.width - marginVert, this.pos[1], -widthVert, heightVert);
+			ctx.rect(this.pos[0], this.pos[1] + heightVert, this.width, this.height - heightVert);
+			ctx.fill();
+			ctx.stroke();
 
 			ctx.fillStyle = "black";
 			ctx.beginPath();
-			ctx.rect(this.pos[0], this.pos[1], boxWidth, this.height);
-			ctx.rect(this.pos[0] + this.width - lastSeg, this.pos[1], boxWidth, this.height);
+			ctx.rect(this.pos[0], this.pos[1] + this.marginHoriz, this.width, heightHoriz);
+			ctx.rect(this.pos[0] + this.width / 2 - baseWidth / 2, this.pos[1] + heightVert - baseHeight, baseWidth, baseHeight);
 			ctx.fill();
 			ctx.stroke();
-			ctx.closePath();
 
-			ctx.beginPath();
-			ctx.fillStyle = data.colors.gray;
-			ctx.rect(this.pos[0] + boxWidth, this.pos[1] + this.height / 2 - pipeWidth / 2, this.width - boxWidth - this.baseStart, pipeWidth);
-			ctx.rect(this.pos[0] + this.width - this.baseStart, this.pos[1], baseWidth, this.height);
-			ctx.rect(this.pos[0] + this.width - this.baseStart + baseWidth, this.pos[1] + this.height - baseWidth, this.baseStart - this.endMargin - 2 * baseWidth - lastSeg, baseWidth);
-			ctx.rect(this.pos[0] + this.width - this.endMargin - baseWidth - lastSeg, this.pos[1], baseWidth, this.height);
-
-			ctx.rect(this.pos[0] + this.width - this.baseStart + baseWidth, this.pos[1] + 60, 25, 45);
-			ctx.rect(this.pos[0] + this.width - this.endMargin - baseWidth - lastSeg, this.pos[1] + 60, -15, 45);
-			ctx.fill();
-			ctx.stroke();
-			ctx.closePath();
-
-			ctx.beginPath();
 			ctx.fillStyle = "white";
-			ctx.arc(this.pos[0] + this.width - this.radius, this.pos[1] + this.height / 2, this.radius, 0, 2 * Math.PI);
-			canvas_arrow(ctx, this.pos[0] + this.width - this.radius, this.pos[1] + this.height / 2, this.pos[0] + this.width + this.radius * (Math.cos(this.angle) - 1), this.pos[1] + this.height / 2 + this.radius * Math.sin(this.angle));
-			ctx.moveTo(this.pos[0] + this.width - 2 * this.radius, this.pos[1] + this.height / 2);
-			ctx.lineTo(this.pos[0] + this.width - lastSeg + boxWidth, this.pos[1] + this.height / 2);
+			ctx.beginPath();
+			ctx.arc(this.pos[0] + this.width / 2, this.pos[1] + gaugeCenterY, this.radius, 0, 2 * Math.PI);
+			canvas_arrow(ctx, this.pos[0] + this.width / 2, this.pos[1] + gaugeCenterY, this.pos[0] + this.width / 2 + this.radius * Math.sin(this.angle), this.pos[1] + gaugeCenterY - this.radius * Math.cos(this.angle));
+
+			ctx.moveTo(this.pos[0] + this.width / 2, this.pos[1] + gaugeCenterY - this.radius);
+			ctx.lineTo(this.pos[0] + this.width / 2, this.pos[1] + this.marginHoriz + heightHoriz);
+
+			ctx.moveTo(this.pos[0] + this.width / 2, this.pos[1] + gaugeCenterY + this.radius);
+			ctx.lineTo(this.pos[0] + this.width / 2, this.pos[1] + this.cylStart);
 			ctx.fill();
 			ctx.stroke();
-		};
 
-		shear(change) {
-			if(this.endMargin <= 25)
+			if(this.drains)
 			{
-				return 1;
+				ctx.fillStyle = data.colors.lightBlue;
+				ctx.beginPath();
+				ctx.moveTo(this.pos[0] + this.width / 2, this.pos[1] + heightVert - baseHeight - 10);
+				ctx.lineTo(this.pos[0] + this.width / 2, this.pos[1] + heightVert / 2 + this.height / 2 + 10);
+				ctx.lineTo(this.pos[0] + this.width + 20, this.pos[1] + heightVert / 2 + this.height / 2 + 10);
+				ctx.lineTo(this.pos[0] + this.width + 20, this.pos[1] + heightVert / 2 + this.height / 2 + 10 - pipeWidth);
+				ctx.lineTo(this.pos[0] + this.width / 2 + pipeWidth, this.pos[1] + heightVert / 2 + this.height / 2 + 10 - pipeWidth);
+				ctx.lineTo(this.pos[0] + this.width / 2 + pipeWidth, this.pos[1] + heightVert - baseHeight - 10);
+
+				ctx.moveTo(this.pos[0] + this.width / 2 - baseWidth / 2 + 30, this.pos[1] + heightVert - baseHeight);
+				ctx.lineTo(this.pos[0] + this.width / 2 - baseWidth / 2 + 30, this.pos[1] + heightVert / 2 + this.height / 2 + 10);
+				ctx.lineTo(this.pos[0] - 20, this.pos[1] + heightVert / 2 + this.height / 2 + 10);
+				ctx.lineTo(this.pos[0] - 20, this.pos[1] + heightVert / 2 + this.height / 2 + 10 - pipeWidth);
+				ctx.lineTo(this.pos[0] + this.width / 2 - baseWidth / 2 + 30 - pipeWidth, this.pos[1] + heightVert / 2 + this.height / 2 + 10 - pipeWidth);
+				ctx.lineTo(this.pos[0] + this.width / 2 - baseWidth / 2 + 30 - pipeWidth, this.pos[1] + heightVert - baseHeight);
+				ctx.stroke();
+				ctx.fill();
 			}
 
-			this.angle += 5 * change * Math.PI / 180;
-			this.baseStart -= change;
-			this.endMargin -= change;
-			return 0;
-		};
-	};
-
-	class weight {
-		constructor(height, width, x, y) {
-			this.height = height;
-			this.width = width;
-			this.pos = [x, y];
-			this.img = new Image();
-			this.img.src = './images/weighing-machine.png';
-			this.img.onload = () => {ctx.drawImage(this.img, this.pos[0], this.pos[1], this.width, this.height);}; 
-		};
-
-		draw(ctx) {
-			ctx.drawImage(objs['weight'].img, objs['weight'].pos[0], objs['weight'].pos[1], objs['weight'].width, objs['weight'].height);
+			ctx.beginPath();
+			for(let i = 0; this.arrows && arrowPad + i * arrowGap < baseWidth; i += 1)
+			{
+				canvas_arrow(ctx, this.pos[0] + this.width / 2 - baseWidth / 2 + arrowPad + i * arrowGap, this.pos[1] + gaugeCenterY + this.radius, this.pos[0] + this.width / 2 - baseWidth / 2 + arrowPad + i * arrowGap, this.pos[1] + this.cylStart - 5);
+			}
+			ctx.stroke();
 		};
 	};
 
@@ -257,27 +258,58 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 	};
 
-	class soils {
-		constructor(num, currSoil) {
-			this.height = currSoil.height / 2;
-			this.width = currSoil.width;
-			this.pos = [...currSoil.pos];
-			this.soils = [];
-
-			for(let i = 0; i < num; i += 1)
-			{
-				this.soils.push(new rect(this.height, this.width, this.pos[0], this.pos[1] + this.height * i, currSoil.color));
-			}
+	class soil {
+		constructor(height, width, x, y) {
+			this.height = height;
+			this.width = width;
+			this.pos = [x, y];
+			this.stoneHeight = 0.1 * this.height;
 		};
 
 		draw(ctx) {
-			this.soils.forEach((soil, idx) => {
-				soil.draw(ctx);
-			});
+			new rect(this.height - 2 * this.stoneHeight, this.width, this.pos[0], this.pos[1] + this.stoneHeight, data.colors.soilBrown).draw(ctx);
+			new multiRect(this.stoneHeight, this.width, this.pos[0], this.pos[1], [0, this.height - 2 * this.stoneHeight], data.colors.lightGray).draw(ctx);
 		};
 
 		shear(change) {
 			this.soils[this.soils.length - 1].pos[0] += change;
+		};
+	};
+
+	class chamber {
+		constructor(height, width, x, y) {
+			this.height = height;
+			this.width = width;
+			this.pos = [x, y];
+			this.waterHeight = 0;
+			this.topHeight = 0.1 * this.height;
+			this.arrows = false;
+		};
+
+		draw(ctx) {
+			const margin = 0.05 * this.width, gap = 20, arrowLen = 25, pad = 20;
+			new rect(this.topHeight, this.width, this.pos[0], this.pos[1], "black").draw(ctx);
+			new rect(this.height - this.topHeight, this.width - 2 * margin, this.pos[0] + margin, this.pos[1] + this.topHeight, "white").draw(ctx);
+			new rect(-this.waterHeight, this.width - 2 * margin, this.pos[0] + margin, this.pos[1] + this.height, data.colors.blue).draw(ctx);
+
+			ctx.fillStyle = "black";
+			ctx.beginPath();
+			for(let i = 0; this.arrows && this.topHeight + pad + i * gap < this.height; i += 1)
+			{
+				canvas_arrow(ctx, this.pos[0] + margin, this.pos[1] + this.topHeight + pad + i * gap, this.pos[0] + margin + arrowLen, this.pos[1] + this.topHeight + pad + i * gap);
+				canvas_arrow(ctx, this.pos[0] + this.width - margin, this.pos[1] + this.topHeight + pad + i * gap, this.pos[0] + this.width - margin - arrowLen, this.pos[1] + this.topHeight + pad + i * gap);
+			}
+			ctx.stroke();
+		};
+
+		addWater(change) {
+			if(this.waterHeight >= this.height - this.topHeight)
+			{
+				return 1;
+			}
+
+			this.waterHeight += change;
+			return 0;
 		};
 	};
 
@@ -367,18 +399,19 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.getElementById("output4").innerHTML = "Shear Box Area, A = ____ cm" + "2".sup();
 
 		objs = {
-			"shearDevice": new shearDevice(120, 540, 20, 260, 260),
-			"weight": new weight(270, 240, 40, 190),
-			"shearBox": new shearBox(90, 170, 75, 190),
-			"mould": new rect(50, 150, 650, 330, data.colors.gray),
-			"soil": new rect(0, 130, 95, 260, data.colors.soilBrown),
+			"chamber": new chamber(150, 150, 540, 180),
+			"membrane": new rect(110, 80, 575, 215, data.colors.yellow),
+			"soil": new soil(120, 60, 585, 210),
+			"drainage": "",
+			"loader": new loader(330, 270, 20, 480, 50),
 		};
 		keys = [];
 
-		enabled = [["weight"], ["weight", "mould"], ["weight", "mould"], ["weight", "mould", "soil"], ["soil", "shearBox"], ["soil", "shearBox", "shearDevice"], ["soil", "shearBox", "shearDevice"], ["soil", "shearBox", "shearDevice"], [], []];
+		enabled = [["loader"], ["loader", "soil"], ["loader", "soil", "membrane"], ["loader", "soil", "membrane", "chamber"], ["loader", "soil", "membrane", "chamber", "drainage"], ["loader", "soil", "membrane", "chamber"], ["loader", "soil", "membrane", "chamber"], ["loader", "soil", "membrane", "chamber"], []];
 		step = 0;
 		translate = [0, 0];
 		lim = [-1, -1];
+		arrows = false;
 	};
 
 	function restart() 
@@ -433,32 +466,18 @@ document.addEventListener('DOMContentLoaded', function() {
 		keys.forEach(function(val, ind, arr) {
 			if(canvasPos[0] >= objs[val].pos[0] - errMargin && canvasPos[0] <= objs[val].pos[0] + objs[val].width + errMargin && canvasPos[1] >= objs[val].pos[1] - errMargin && canvasPos[1] <= objs[val].pos[1] + objs[val].height + errMargin)
 			{
-				if(step === 2 && val === "mould")
+				if(step === 5 && val === "chamber")
 				{
 					hover = true;
-					translate[0] = -5;
-					translate[1] = -5;
-					lim[0] = 85;
-					lim[1] = 210;
-				}
-
-				else if(step === 6 && val === "shearBox")
-				{
-					hover = true;
-					translate[0] = 1;
 					translate[1] = 1;
-					lim[0] = 410;
-					lim[1] = 365 - objs['shearBox'].height;
 				}
 
-				else if(step === 7 && val === "shearBox")
+				else if(step === 6 && val === "chamber")
 				{
 					hover = true;
-					translate[0] = 1;
 					if(flag)
 					{
-						const temp = new soils(2, objs['soil']);
-						objs['soil'] = temp;
+						arrows = true;
 					}
 				}
 			}
@@ -485,19 +504,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	const border = "black", lineWidth = 3, fps = 150;
 	const msgs = [
-		"Click on 'Weighing Machine' in the apparatus menu to add a weighing machine to the workspace.", 
-		"Click on 'Mould' in the apparatus menu to add a mould to the workspace.",
-		"Click on the mould to move it to the weighing machine and weigh it.",
-		"Click on 'Soil Sample' in the apparatus menu to add a soil sample to the mould and weigh them together .",
-		"Click on 'Shear Box' in the apparatus menu to add an assembled shear box(including blue porous stones) with the soil sample in it.",
-		"Click on 'Shear Device' in the apparatus menu to add a shear device to the workspace.",
-		"Click on the shear box to move it to the shear device.",
-		"Click on the shear box to start the device and apply a force to shear the soil.",
+		"Click on 'Axial Loading Device' in the apparatus menu to add a loading device to the workspace.", 
+		"Click on 'Soil Sample' in the apparatus menu to add a soil sample to the device base with porous stones on the top and bottom.",
+		"Click on 'Membrane' in the apparatus menu to add a membrane around the soil sample.", 
+		"Click on 'Cylindrical Chamber' in the apparatus menu to enclose the sample in a cylindrical cell.",
+		"Click on 'Drainage' in the apparatus menu to attach drainage pipes to the chamber and sample.",
+		"Click on the chamber to fill it with water.",
+		"Click on the chamber to start the machine and apply the required forces.",
 		"Click the restart button to perform the experiment again.",
 	];
 
 	let diameter, area;
-	let step, translate, lim, objs, keys, enabled, small;
+	let step, translate, lim, objs, keys, enabled, small, arrows;
 	init();
 
 	const tableData = [
@@ -512,20 +530,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	objNames.forEach(function(elem, ind) {
 		const obj = document.getElementById(elem);
 		obj.addEventListener('click', function(event) {
-			if(elem === "shearBox")
+			if(elem === "drainage")
 			{
-				keys = keys.filter(function(val, index) {
-					return val !== "weight" && val !== "mould";
-				});
-			}
-
-			keys.push(elem);
-
-			if(elem === "soil")
-			{
+				objs['loader'].drains = true;
+				step += 1;
 				return;
 			}
 
+			keys.push(elem);
 			step += 1;
 		});
 	});
@@ -592,46 +604,25 @@ document.addEventListener('DOMContentLoaded', function() {
 			document.getElementById("main").style.pointerEvents = 'auto';
 		}
 
-		if(step === 3 && keys.includes("soil"))
+		if(arrows)
 		{
-			translate[1] = -1;
-			updatePos(objs['soil'], translate);
-			step += objs['soil'].heightChange(-translate[1], 50);
-			translate[1] = 0;
+			objs['chamber'].arrows = true;
+			objs['loader'].arrows = true;
+			step += 1;
+			arrows = false;
 		}
 
 		if(translate[0] !== 0 || translate[1] !== 0)
 		{
 			let temp = step;
-			const soilMoves = [6], mouldMoves = [2], shearBoxMoves = [6];
 
-			if(step === 7)
+			if(step === 5)
 			{
-				objs['soil'].shear(translate[0]);
-				objs['shearBox'].shear(translate[0]);
-				temp += objs['shearDevice'].shear(translate[0]);
-			}
-
-			if(mouldMoves.includes(step))
-			{
-				updatePos(objs['mould'], translate);
-				temp = limCheck(objs['mould'], translate, lim, step);
-			}
-
-			if(soilMoves.includes(step))
-			{
-				updatePos(objs['soil'], translate);
-
-				if(!shearBoxMoves.includes(step))
+				temp += objs['chamber'].addWater(translate[1]);
+				if(temp !== step)
 				{
-					temp = limCheck(objs['soil'], translate, lim, step);
+					translate[1] = 0;
 				}
-			}
-
-			if(shearBoxMoves.includes(step))
-			{
-				updatePos(objs['shearBox'], translate);
-				temp = limCheck(objs['shearBox'], translate, lim, step);
 			}
 
 			step = temp;
