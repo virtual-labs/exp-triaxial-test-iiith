@@ -15,6 +15,15 @@
 					<div id="procedure-message" class="v-instruction-text">
 					</div>
 				</div>
+				<div class="column center-content">
+					<div class="v-select">
+						<select id="menu">
+							<option value="UU">Unconsolidated Undrained</option>
+							<option value="CU">Consolidated Undrained</option>
+							<option value="CD">Consolidated Drained</option>
+						</select>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -50,7 +59,9 @@
 				<canvas id="main" class="v-canvas-container"></canvas>
 				<div class="v-datalist-container graph" id='graph'>
 					<div class="v-datalist-title">Graph Observations</div>
-					<div class="plot" id="plot"></div>
+					<div class="plot" id="plot0"></div>
+					<div class="plot" id="plot1"></div>
+					<div class="plot" id="plot2"></div>
 					<div class="v-datalist-row v-bold" id="optWater"></div>
 					<div class="v-datalist-row v-bold" id="maxDensity"></div>
 				</div>

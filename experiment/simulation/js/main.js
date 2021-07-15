@@ -2,37 +2,49 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 
+	const menu = document.getElementById('menu');
 	const restartButton = document.getElementById('restart');
 	const instrMsg = document.getElementById('procedure-message');
 
+	menu.addEventListener('change', function() { window.clearTimeout(tmHandle); testType = menu.value; restart(); });
 	restartButton.addEventListener('click', function() {restart();});
+
+	function finish(step) {
+		if(!flag && step === enabled.length - 1)
+		{
+			flag = true;
+
+			logic(testData[testType].tableData, testData[testType].graphs);
+			generateTableHead(table, Object.keys(testData[testType].tableData[0]));
+			generateTable(table, testData[testType].tableData);
+
+			document.getElementById("main").style.display = 'none';
+			document.getElementById("graph").style.display = 'inline-block';
+
+			document.getElementById("apparatus").style.display = 'none';
+			document.getElementById("observations").style.width = '40%';
+			if(small)
+			{
+				document.getElementById("observations").style.width = '85%';
+			}
+		}
+	};
 
 	function randomNumber(min, max) {
 		return Number((Math.random() * (max - min + 1) + min).toFixed(2));
 	};
 
-	function logic(tableData)
+	function logic(tableData, graphs)
 	{
-		const waterContents = [randomNumber(7, 9), randomNumber(10, 12), randomNumber(12, 14), randomNumber(15, 16), randomNumber(17, 18)], soilMasses = [randomNumber(1500, 1600), randomNumber(1750, 1800), randomNumber(2150, 2200), randomNumber(2100, 2150), randomNumber(2000, 2150),];
-		let xVals = [], yVals = [], maxIx = 0;
-		tableData.forEach(function(row, index) {
-			row['Soil Sample No.'] = index + 1;
-			row['Water Content(%)'] = Number(waterContents[index]);
-			row['Wet Compacted Soil Mass(g)'] = Number(soilMasses[index]);
-			row['Wet Density(g/cc)'] = (soilMasses[index] / soilVol).toFixed(2);
-			row['Dry Density(g/cc)'] = Number((row['Wet Density(g/cc)'] / (1 + waterContents[index] / 100)).toFixed(2));
-			xVals.push(row['Water Content(%)']);
-			yVals.push(row['Dry Density(g/cc)']);
-
-			if(yVals[maxIx] < yVals[index])
-			{
-				maxIx = index;
-			}
+		let traces = [];
+		graphs.forEach((graph, index) => {
+			let xVals = [], yVals = [];
+			tableData.forEach(function(row, index) {
+				xVals.push(row[graph[0]] * graph[4]);
+				yVals.push(row[graph[1]] * graph[5]);
+			});
+			drawGraph([trace(xVals, yVals, 'Graph')], [graph[2], graph[3]], 'plot' + String(index));
 		});
-
-		document.getElementById('optWater').innerHTML = "Optimum Moisture Content = " + String(xVals[maxIx]) + " %";
-		document.getElementById('maxDensity').innerHTML = "Maximum Dry Density = " + String(yVals[maxIx]) + " g/cm<sup>3</sup>";
-		return trace(xVals, yVals, 'Graph');
 	};
 
 	function limCheck(obj, translate, lim, step)
@@ -67,23 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				document.getElementById("output4").innerHTML = "Shear Box Area, A = " + String(area) + " cm" + "2".sup();
 			}
 
-			else if(step === enabled.length - 2)
-			{
-				const retTrace = logic(tableData);
-				generateTableHead(table, Object.keys(tableData[0]));
-				generateTable(table, tableData);
-				drawGraph([retTrace], ['Water Content(%)', 'Dry Density(g/cc)'], 'plot');
-
-				document.getElementById("main").style.display = 'none';
-				document.getElementById("graph").style.display = 'inline-block';
-
-				document.getElementById("apparatus").style.display = 'none';
-				document.getElementById("observations").style.width = '40%';
-				if(small)
-				{
-					document.getElementById("observations").style.width = '85%';
-				}
-			}
 			return step + 1;
 		}
 
@@ -326,18 +321,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function trace(Xaxis, Yaxis, name)
 	{
-		let xVals = [], yVals = [];
+		let xVals = [...Xaxis], yVals = [...Yaxis];
 
-		Xaxis.forEach(function(xcoord, i) {
-			let xTemp, yTemp;
-			if(i !== Xaxis.length - 1)
-			{
-				[xTemp, yTemp] = lineFromPoints([Xaxis[i], Yaxis[i]], [Xaxis[i + 1], Yaxis[i + 1]]);
-			}
+		//Xaxis.forEach(function(xcoord, i) {
+			//let xTemp, yTemp;
+			//if(i !== Xaxis.length - 1)
+			//{
+				//[xTemp, yTemp] = lineFromPoints([Xaxis[i], Yaxis[i]], [Xaxis[i + 1], Yaxis[i + 1]]);
+			//}
 
-			xVals = xVals.concat(xTemp);
-			yVals = yVals.concat(yTemp);
-		});
+			//xVals = xVals.concat(xTemp);
+			//yVals = yVals.concat(yTemp);
+		//});
 
 		const retTrace = {
 			x: xVals,
@@ -364,8 +359,6 @@ document.addEventListener('DOMContentLoaded', function() {
 							color: '#000000'
 						}
 					},
-					range: [0, 20],
-					dtick: 5
 				},
 				yaxis: {
 					title: {
@@ -376,8 +369,6 @@ document.addEventListener('DOMContentLoaded', function() {
 							color: '#000000'
 						}
 					},
-					range: [1, 2.4],
-					dtick: 0.2
 				}
 			};
 
@@ -407,11 +398,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 		keys = [];
 
-		enabled = [["loader"], ["loader", "soil"], ["loader", "soil", "membrane"], ["loader", "soil", "membrane", "chamber"], ["loader", "soil", "membrane", "chamber", "drainage"], ["loader", "soil", "membrane", "chamber"], ["loader", "soil", "membrane", "chamber"], ["loader", "soil", "membrane", "chamber"], []];
+		enabled = [["loader"], ["loader", "soil"], ["loader", "soil", "membrane"], ["loader", "soil", "membrane", "chamber"], ["loader", "soil", "membrane", "chamber", "drainage"], ["loader", "soil", "membrane", "chamber"], ["loader", "soil", "membrane", "chamber"], []];
 		step = 0;
 		translate = [0, 0];
 		lim = [-1, -1];
 		arrows = false;
+		flag = false;
 	};
 
 	function restart() 
@@ -434,8 +426,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		let row = thead.insertRow();
 		data.forEach(function(key, ind) {
 			let th = document.createElement("th");
-			let text = document.createTextNode(key);
-			th.appendChild(text);
+			th.innerHTML = key;
 			row.appendChild(th);
 		});
 	};
@@ -445,8 +436,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			let row = table.insertRow();
 			Object.keys(rowVals).forEach(function(key, i) {
 				let cell = row.insertCell();
-				let text = document.createTextNode(rowVals[key]);
-				cell.appendChild(text);
+				cell.innerHTML = rowVals[key];
 			});
 		});
 	};
@@ -514,17 +504,39 @@ document.addEventListener('DOMContentLoaded', function() {
 		"Click the restart button to perform the experiment again.",
 	];
 
-	let diameter, area;
-	let step, translate, lim, objs, keys, enabled, small, arrows;
+	let testType = "UU", diameter, area;
+	let step, translate, lim, objs, keys, enabled, small, arrows, flag;
 	init();
 
-	const tableData = [
-		{ "Soil Sample No.": "", "Water Content(%)": "", "Wet Compacted Soil Mass(g)": "", "Wet Density(g/cc)": "", "Dry Density(g/cc)": "" }, 
-		{ "Soil Sample No.": "", "Water Content(%)": "", "Wet Compacted Soil Mass(g)": "", "Wet Density(g/cc)": "", "Dry Density(g/cc)": "" }, 
-		{ "Soil Sample No.": "", "Water Content(%)": "", "Wet Compacted Soil Mass(g)": "", "Wet Density(g/cc)": "", "Dry Density(g/cc)": "" }, 
-		{ "Soil Sample No.": "", "Water Content(%)": "", "Wet Compacted Soil Mass(g)": "", "Wet Density(g/cc)": "", "Dry Density(g/cc)": "" }, 
-		{ "Soil Sample No.": "", "Water Content(%)": "", "Wet Compacted Soil Mass(g)": "", "Wet Density(g/cc)": "", "Dry Density(g/cc)": "" }, 
-	];
+	const testData = {
+		"UU": {
+			"tableData": [
+				{ "Sample Deformation (cm)": "0.025", "Vertical Strain": "0.0028", "Proving Ring Reading": "3.5", "Piston Load, P (kg)": "0.583", "Corrected Area, A (cm<sup>2</sup>)": "10.09", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "0.058" }, 
+				{ "Sample Deformation (cm)": "0.076", "Vertical Strain": "0.0085", "Proving Ring Reading": "11", "Piston Load, P (kg)": "1.831", "Corrected Area, A (cm<sup>2</sup>)": "10.148", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "0.18" }, 
+				{ "Sample Deformation (cm)": "0.127", "Vertical Strain": "0.0142", "Proving Ring Reading": "18", "Piston Load, P (kg)": "2.997", "Corrected Area, A (cm<sup>2</sup>)": "10.206", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "0.294" }, 
+				{ "Sample Deformation (cm)": "0.254", "Vertical Strain": "0.0284", "Proving Ring Reading": "31", "Piston Load, P (kg)": "5.161", "Corrected Area, A (cm<sup>2</sup>)": "10.361", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "0.498" }, 
+				{ "Sample Deformation (cm)": "0.457", "Vertical Strain": "0.0511", "Proving Ring Reading": "44", "Piston Load, P (kg)": "7.326", "Corrected Area, A (cm<sup>2</sup>)": "10.606", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "0.691" }, 
+				{ "Sample Deformation (cm)": "0.66", "Vertical Strain": "0.0739", "Proving Ring Reading": "52", "Piston Load, P (kg)": "8.658", "Corrected Area, A (cm<sup>2</sup>)": "10.864", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "0.797" }, 
+				{ "Sample Deformation (cm)": "0.889", "Vertical Strain": "0.0994", "Proving Ring Reading": "52", "Piston Load, P (kg)": "8.658", "Corrected Area, A (cm<sup>2</sup>)": "11.193", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "0.775" }, 
+				{ "Sample Deformation (cm)": "1.143", "Vertical Strain": "0.1278", "Proving Ring Reading": "49", "Piston Load, P (kg)": "8.158", "Corrected Area, A (cm<sup>2</sup>)": "11.541", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "0.707" }, 
+			],
+			"graphs": [["Vertical Strain", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)", "Axial Strain (%)", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)", 100, 1]]
+		},
+		"CU": {
+			"tableData": [
+				{ "Sample Deformation (cm)": "0.015", "Vertical Strain": "0.0021", "Proving Ring Reading": "15", "Piston Load, P (kg)": "16.07", "Corrected Area, A (cm<sup>2</sup>)": "8.98", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "17.9", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "2.94", "Pore Water Pressure Parameter": "0.164" }, 
+				{ "Sample Deformation (cm)": "0.061", "Vertical Strain": "0.0085", "Proving Ring Reading": "135", "Piston Load, P (kg)": "144.63", "Corrected Area, A (cm<sup>2</sup>)": "9.04", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "159.99", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "74.56", "Pore Water Pressure Parameter": "0.466" }, 
+				{ "Sample Deformation (cm)": "0.114", "Vertical Strain": "0.0158", "Proving Ring Reading": "172", "Piston Load, P (kg)": "184.26", "Corrected Area, A (cm<sup>2</sup>)": "9.11", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "202.26", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "111.83", "Pore Water Pressure Parameter": "0.553" }, 
+				{ "Sample Deformation (cm)": "0.183", "Vertical Strain": "0.0254", "Proving Ring Reading": "205", "Piston Load, P (kg)": "219.62", "Corrected Area, A (cm<sup>2</sup>)": "9.19", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "238.98", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "148.13", "Pore Water Pressure Parameter": "0.62" }, 
+				{ "Sample Deformation (cm)": "0.274", "Vertical Strain": "0.0380", "Proving Ring Reading": "236", "Piston Load, P (kg)": "252.83", "Corrected Area, A (cm<sup>2</sup>)": "9.31", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "271.57", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "167.75", "Pore Water Pressure Parameter": "0.618" }, 
+				{ "Sample Deformation (cm)": "0.427", "Vertical Strain": "0.0592", "Proving Ring Reading": "265", "Piston Load, P (kg)": "283.89", "Corrected Area, A (cm<sup>2</sup>)": "9.52", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "298.2", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "176.58", "Pore Water Pressure Parameter": "0.592" }, 
+				{ "Sample Deformation (cm)": "0.503", "Vertical Strain": "0.0697", "Proving Ring Reading": "278", "Piston Load, P (kg)": "297.82", "Corrected Area, A (cm<sup>2</sup>)": "9.63", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "309.26", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "176.58", "Pore Water Pressure Parameter": "0.57" }, 
+				{ "Sample Deformation (cm)": "0.594", "Vertical Strain": "0.0824", "Proving Ring Reading": "287", "Piston Load, P (kg)": "307.46", "Corrected Area, A (cm<sup>2</sup>)": "9.76", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "315.02", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "176.58", "Pore Water Pressure Parameter": "0.561" }, 
+				{ "Sample Deformation (cm)": "0.726", "Vertical Strain": "0.1007", "Proving Ring Reading": "286", "Piston Load, P (kg)": "306.39", "Corrected Area, A (cm<sup>2</sup>)": "9.96", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "307.62", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "160.88", "Pore Water Pressure Parameter": "0.523" }, 
+			],
+			"graphs": [["Vertical Strain", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)", "Axial Strain (%)", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)", 100, 1], ["Vertical Strain", "Excess Pore Water Pressure (kN/m<sup>2</sup>)", "Axial Strain (%)", "Excess Pore Water Pressure (kN/m<sup>2</sup>)", 100, 1], ["Vertical Strain", "Pore Water Pressure Parameter", "Axial Strain (%)", "Pore Water Pressure Parameter", 100, 1]]
+		}
+	};
 
 	const objNames = Object.keys(objs);
 	objNames.forEach(function(elem, ind) {
@@ -629,6 +641,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 
 		document.getElementById("procedure-message").innerHTML = msgs[step];
+		finish(step);
 		tmHandle = window.setTimeout(draw, 1000 / fps);
 	};
 
