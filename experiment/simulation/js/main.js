@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const instrMsg = document.getElementById('procedure-message');
 
 	menu.addEventListener('change', function() { window.clearTimeout(tmHandle); testType = menu.value; restart(); });
-	restartButton.addEventListener('click', function() {restart();});
+	restartButton.addEventListener('click', restart);
 
 	function finish(step) {
 		if(!flag && step === enabled.length - 1)
@@ -61,24 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		if(translate[0] === 0 && translate[1] === 0)
 		{
-			if(step === 2)
-			{
-				document.getElementById("output1").innerHTML = "Mass of mould = " + String(720) + " g";
-			}
-
-			else if(step === 3)
-			{
-				document.getElementById("output2").innerHTML = "Mass of soil = " + String(280) + " g";
-			}
-
-			else if(step === 4)
-			{
-				diameter = randomNumber(6, 7);
-				area = (Math.PI * diameter * diameter / 4).toFixed(2);
-				document.getElementById("output3").innerHTML = "Shear Box Diameter = " + String(diameter) + " cm";
-				document.getElementById("output4").innerHTML = "Shear Box Area, A = " + String(area) + " cm" + "2".sup();
-			}
-
 			return step + 1;
 		}
 
@@ -170,14 +152,14 @@ document.addEventListener('DOMContentLoaded', function() {
 			ctx.fill();
 			ctx.stroke();
 
-			ctx.fillStyle = "black";
+			ctx.fillStyle = data.colors.black;
 			ctx.beginPath();
 			ctx.rect(this.pos[0], this.pos[1] + this.marginHoriz, this.width, heightHoriz);
 			ctx.rect(this.pos[0] + this.width / 2 - baseWidth / 2, this.pos[1] + heightVert - baseHeight, baseWidth, baseHeight);
 			ctx.fill();
 			ctx.stroke();
 
-			ctx.fillStyle = "white";
+			ctx.fillStyle = data.colors.white;
 			ctx.beginPath();
 			ctx.arc(this.pos[0] + this.width / 2, this.pos[1] + gaugeCenterY, this.radius, 0, 2 * Math.PI);
 			canvas_arrow(ctx, this.pos[0] + this.width / 2, this.pos[1] + gaugeCenterY, this.pos[0] + this.width / 2 + this.radius * Math.sin(this.angle), this.pos[1] + gaugeCenterY - this.radius * Math.cos(this.angle));
@@ -283,11 +265,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		draw(ctx) {
 			const margin = 0.05 * this.width, gap = 20, arrowLen = 25, pad = 20;
-			new rect(this.topHeight, this.width, this.pos[0], this.pos[1], "black").draw(ctx);
-			new rect(this.height - this.topHeight, this.width - 2 * margin, this.pos[0] + margin, this.pos[1] + this.topHeight, "white").draw(ctx);
+			new rect(this.topHeight, this.width, this.pos[0], this.pos[1], data.colors.black).draw(ctx);
+			new rect(this.height - this.topHeight, this.width - 2 * margin, this.pos[0] + margin, this.pos[1] + this.topHeight, data.colors.white).draw(ctx);
 			new rect(-this.waterHeight, this.width - 2 * margin, this.pos[0] + margin, this.pos[1] + this.height, data.colors.blue).draw(ctx);
 
-			ctx.fillStyle = "black";
+			ctx.fillStyle = data.colors.black;
 			ctx.beginPath();
 			for(let i = 0; this.arrows && this.topHeight + pad + i * gap < this.height; i += 1)
 			{
@@ -356,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						font: {
 							family: 'Courier New, monospace',
 							size: 18,
-							color: '#000000'
+							color: data.colors.black
 						}
 					},
 				},
@@ -366,7 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						font: {
 							family: 'Courier New, monospace',
 							size: 18,
-							color: '#000000'
+							color: data.colors.white
 						}
 					},
 				}
@@ -384,11 +366,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function init()
 	{
-		document.getElementById("output1").innerHTML = "Mass of mould = ____ g";
-		document.getElementById("output2").innerHTML = "Mass of soil = ____ g";
-		document.getElementById("output3").innerHTML = "Shear Box Diameter = ____ cm";
-		document.getElementById("output4").innerHTML = "Shear Box Area, A = ____ cm" + "2".sup();
-
 		objs = {
 			"chamber": new chamber(150, 150, 540, 180),
 			"membrane": new rect(110, 80, 575, 215, data.colors.yellow),
@@ -492,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const ctx = canvas.getContext("2d");
 	ctx.lineWidth = 3;
 
-	const border = "black", lineWidth = 3, fps = 150;
+	const border = data.colors.black, lineWidth = 3, fps = 150;
 	const msgs = [
 		"Click on 'Axial Loading Device' in the apparatus menu to add a loading device to the workspace.", 
 		"Click on 'Soil Sample' in the apparatus menu to add a soil sample to the device base with porous stones on the top and bottom.",
@@ -504,12 +481,28 @@ document.addEventListener('DOMContentLoaded', function() {
 		"Click the restart button to perform the experiment again.",
 	];
 
-	let testType = "UU", diameter, area;
-	let step, translate, lim, objs, keys, enabled, small, arrows, flag;
-	init();
-
 	const testData = {
 		"UU": {
+			"outputs": [
+				{
+					"LHS": "Initial Sample Length = ",
+					"value": 8.94,
+					"unit": " cm",
+					"step": 2
+				},
+				{
+					"LHS": "Initial Sample Diameter = ",
+					"value": 3.58,
+					"unit": " cm",
+					"step": 2
+				},
+				{
+					"LHS": "Cell Confining Pressure, σ<sub>3</sub> = ",
+					"value": 1.05,
+					"unit": " kg/cm<sup>2</sup>",
+					"step": 6
+				},
+			],
 			"tableData": [
 				{ "Sample Deformation (cm)": "0.025", "Vertical Strain": "0.0028", "Proving Ring Reading": "3.5", "Piston Load, P (kg)": "0.583", "Corrected Area, A (cm<sup>2</sup>)": "10.09", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "0.058" }, 
 				{ "Sample Deformation (cm)": "0.076", "Vertical Strain": "0.0085", "Proving Ring Reading": "11", "Piston Load, P (kg)": "1.831", "Corrected Area, A (cm<sup>2</sup>)": "10.148", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "0.18" }, 
@@ -523,20 +516,44 @@ document.addEventListener('DOMContentLoaded', function() {
 			"graphs": [["Vertical Strain", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)", "Axial Strain (%)", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)", 100, 1]]
 		},
 		"CU": {
-			"tableData": [
-				{ "Sample Deformation (cm)": "0.015", "Vertical Strain": "0.0021", "Proving Ring Reading": "15", "Piston Load, P (kg)": "16.07", "Corrected Area, A (cm<sup>2</sup>)": "8.98", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "17.9", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "2.94", "Pore Water Pressure Parameter": "0.164" }, 
-				{ "Sample Deformation (cm)": "0.061", "Vertical Strain": "0.0085", "Proving Ring Reading": "135", "Piston Load, P (kg)": "144.63", "Corrected Area, A (cm<sup>2</sup>)": "9.04", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "159.99", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "74.56", "Pore Water Pressure Parameter": "0.466" }, 
-				{ "Sample Deformation (cm)": "0.114", "Vertical Strain": "0.0158", "Proving Ring Reading": "172", "Piston Load, P (kg)": "184.26", "Corrected Area, A (cm<sup>2</sup>)": "9.11", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "202.26", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "111.83", "Pore Water Pressure Parameter": "0.553" }, 
-				{ "Sample Deformation (cm)": "0.183", "Vertical Strain": "0.0254", "Proving Ring Reading": "205", "Piston Load, P (kg)": "219.62", "Corrected Area, A (cm<sup>2</sup>)": "9.19", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "238.98", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "148.13", "Pore Water Pressure Parameter": "0.62" }, 
-				{ "Sample Deformation (cm)": "0.274", "Vertical Strain": "0.0380", "Proving Ring Reading": "236", "Piston Load, P (kg)": "252.83", "Corrected Area, A (cm<sup>2</sup>)": "9.31", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "271.57", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "167.75", "Pore Water Pressure Parameter": "0.618" }, 
-				{ "Sample Deformation (cm)": "0.427", "Vertical Strain": "0.0592", "Proving Ring Reading": "265", "Piston Load, P (kg)": "283.89", "Corrected Area, A (cm<sup>2</sup>)": "9.52", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "298.2", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "176.58", "Pore Water Pressure Parameter": "0.592" }, 
-				{ "Sample Deformation (cm)": "0.503", "Vertical Strain": "0.0697", "Proving Ring Reading": "278", "Piston Load, P (kg)": "297.82", "Corrected Area, A (cm<sup>2</sup>)": "9.63", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "309.26", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "176.58", "Pore Water Pressure Parameter": "0.57" }, 
-				{ "Sample Deformation (cm)": "0.594", "Vertical Strain": "0.0824", "Proving Ring Reading": "287", "Piston Load, P (kg)": "307.46", "Corrected Area, A (cm<sup>2</sup>)": "9.76", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "315.02", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "176.58", "Pore Water Pressure Parameter": "0.561" }, 
-				{ "Sample Deformation (cm)": "0.726", "Vertical Strain": "0.1007", "Proving Ring Reading": "286", "Piston Load, P (kg)": "306.39", "Corrected Area, A (cm<sup>2</sup>)": "9.96", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)": "307.62", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "160.88", "Pore Water Pressure Parameter": "0.523" }, 
+			"outputs": [
+				{
+					"LHS": "Initial Sample Length = ",
+					"value": 7.62,
+					"unit": " cm",
+					"step": 2
+				},
+				{
+					"LHS": "Initial Sample Diameter = ",
+					"value": 3.57,
+					"unit": " cm",
+					"step": 2
+				},
+				{
+					"LHS": "Cell Confining Pressure, σ<sub>3</sub> = ",
+					"value": 392,
+					"unit": " kN/m<sup>2</sup>",
+					"step": 6
+				},
 			],
-			"graphs": [["Vertical Strain", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)", "Axial Strain (%)", "Deviatory Stress, P/A (kg/cm<sup>2</sup>)", 100, 1], ["Vertical Strain", "Excess Pore Water Pressure (kN/m<sup>2</sup>)", "Axial Strain (%)", "Excess Pore Water Pressure (kN/m<sup>2</sup>)", 100, 1], ["Vertical Strain", "Pore Water Pressure Parameter", "Axial Strain (%)", "Pore Water Pressure Parameter", 100, 1]]
+			"tableData": [
+				{ "Sample Deformation (cm)": "0.015", "Vertical Strain": "0.0021", "Proving Ring Reading": "15", "Piston Load, P (N)": "16.07", "Corrected Area, A (cm<sup>2</sup>)": "8.98", "Deviatory Stress, P/A (kN/m<sup>2</sup>)": "17.9", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "2.94", "Pore Water Pressure Parameter": "0.164" }, 
+				{ "Sample Deformation (cm)": "0.061", "Vertical Strain": "0.0085", "Proving Ring Reading": "135", "Piston Load, P (N)": "144.63", "Corrected Area, A (cm<sup>2</sup>)": "9.04", "Deviatory Stress, P/A (kN/m<sup>2</sup>)": "159.99", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "74.56", "Pore Water Pressure Parameter": "0.466" }, 
+				{ "Sample Deformation (cm)": "0.114", "Vertical Strain": "0.0158", "Proving Ring Reading": "172", "Piston Load, P (N)": "184.26", "Corrected Area, A (cm<sup>2</sup>)": "9.11", "Deviatory Stress, P/A (kN/m<sup>2</sup>)": "202.26", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "111.83", "Pore Water Pressure Parameter": "0.553" }, 
+				{ "Sample Deformation (cm)": "0.183", "Vertical Strain": "0.0254", "Proving Ring Reading": "205", "Piston Load, P (N)": "219.62", "Corrected Area, A (cm<sup>2</sup>)": "9.19", "Deviatory Stress, P/A (kN/m<sup>2</sup>)": "238.98", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "148.13", "Pore Water Pressure Parameter": "0.62" }, 
+				{ "Sample Deformation (cm)": "0.274", "Vertical Strain": "0.0380", "Proving Ring Reading": "236", "Piston Load, P (N)": "252.83", "Corrected Area, A (cm<sup>2</sup>)": "9.31", "Deviatory Stress, P/A (kN/m<sup>2</sup>)": "271.57", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "167.75", "Pore Water Pressure Parameter": "0.618" }, 
+				{ "Sample Deformation (cm)": "0.427", "Vertical Strain": "0.0592", "Proving Ring Reading": "265", "Piston Load, P (N)": "283.89", "Corrected Area, A (cm<sup>2</sup>)": "9.52", "Deviatory Stress, P/A (kN/m<sup>2</sup>)": "298.2", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "176.58", "Pore Water Pressure Parameter": "0.592" }, 
+				{ "Sample Deformation (cm)": "0.503", "Vertical Strain": "0.0697", "Proving Ring Reading": "278", "Piston Load, P (N)": "297.82", "Corrected Area, A (cm<sup>2</sup>)": "9.63", "Deviatory Stress, P/A (kN/m<sup>2</sup>)": "309.26", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "176.58", "Pore Water Pressure Parameter": "0.57" }, 
+				{ "Sample Deformation (cm)": "0.594", "Vertical Strain": "0.0824", "Proving Ring Reading": "287", "Piston Load, P (N)": "307.46", "Corrected Area, A (cm<sup>2</sup>)": "9.76", "Deviatory Stress, P/A (kN/m<sup>2</sup>)": "315.02", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "176.58", "Pore Water Pressure Parameter": "0.561" }, 
+				{ "Sample Deformation (cm)": "0.726", "Vertical Strain": "0.1007", "Proving Ring Reading": "286", "Piston Load, P (N)": "306.39", "Corrected Area, A (cm<sup>2</sup>)": "9.96", "Deviatory Stress, P/A (kN/m<sup>2</sup>)": "307.62", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "160.88", "Pore Water Pressure Parameter": "0.523" }, 
+			],
+			"graphs": [["Vertical Strain", "Deviatory Stress, P/A (N/m<sup>2</sup>)", "Axial Strain (%)", "Deviatory Stress, P/A (N/m<sup>2</sup>)", 100, 1], ["Vertical Strain", "Excess Pore Water Pressure (kN/m<sup>2</sup>)", "Axial Strain (%)", "Excess Pore Water Pressure (kN/m<sup>2</sup>)", 100, 1], ["Vertical Strain", "Pore Water Pressure Parameter", "Axial Strain (%)", "Pore Water Pressure Parameter", 100, 1]]
 		}
 	};
+
+	let testType = "UU", diameter, area;
+	let step, translate, lim, objs, keys, enabled, small, arrows, flag;
+	init();
 
 	const objNames = Object.keys(objs);
 	objNames.forEach(function(elem, ind) {
@@ -639,6 +656,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			step = temp;
 		}
+
+		testData[testType].outputs.forEach((observation, idx) => {
+			document.getElementById("output" + String(idx + 1)).innerHTML = observation.LHS + "____" + observation.unit;
+			if(step >= observation.step)
+			{
+				document.getElementById("output" + String(idx + 1)).innerHTML = observation.LHS + observation.value + observation.unit;
+			}
+		});
 
 		document.getElementById("procedure-message").innerHTML = msgs[step];
 		finish(step);
