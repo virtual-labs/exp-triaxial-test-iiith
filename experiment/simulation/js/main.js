@@ -6,8 +6,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	const restartButton = document.getElementById('restart');
 	const instrMsg = document.getElementById('procedure-message');
 
-	menu.addEventListener('change', function() { window.clearTimeout(tmHandle); testType = menu.value; restart(); });
+	menu.addEventListener('change', function() { window.clearTimeout(tmHandle); graphClear(testData[testType].graphs); testType = menu.value; restart(); });
 	restartButton.addEventListener('click', restart);
+
+	function graphClear(graphs) {
+		graphs.forEach((graph, ix) => {
+			document.getElementById('plot' + String(ix)).innerHTML = '';
+		});
+	};
 
 	function finish(step) {
 		if(!flag && step === enabled.length - 1)
@@ -28,10 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				document.getElementById("observations").style.width = '85%';
 			}
 		}
-	};
-
-	function randomNumber(min, max) {
-		return Number((Math.random() * (max - min + 1) + min).toFixed(2));
 	};
 
 	function logic(tableData, graphs)
@@ -290,31 +292,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 	};
 
-	function lineFromPoints(p, q)
-	{
-		const m = (q[1] - p[1]) / (q[0] - p[0]), c = p[1] - m * p[0];
-		const xVals = math.range(p[0], q[0], 1).toArray();
-		const yVals = xVals.map(function (x) {
-			return Number((m * x + c).toFixed(2));
-		});
-
-		return [xVals, yVals];
-	};
-
 	function trace(Xaxis, Yaxis, name)
 	{
 		let xVals = [...Xaxis], yVals = [...Yaxis];
-
-		//Xaxis.forEach(function(xcoord, i) {
-			//let xTemp, yTemp;
-			//if(i !== Xaxis.length - 1)
-			//{
-				//[xTemp, yTemp] = lineFromPoints([Xaxis[i], Yaxis[i]], [Xaxis[i + 1], Yaxis[i + 1]]);
-			//}
-
-			//xVals = xVals.concat(xTemp);
-			//yVals = yVals.concat(yTemp);
-		//});
 
 		const retTrace = {
 			x: xVals,
@@ -348,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						font: {
 							family: 'Courier New, monospace',
 							size: 18,
-							color: data.colors.white
+							color: data.colors.black
 						}
 					},
 				}
@@ -547,11 +527,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				{ "Sample Deformation (cm)": "0.594", "Vertical Strain": "0.0824", "Proving Ring Reading": "287", "Piston Load, P (N)": "307.46", "Corrected Area, A (cm<sup>2</sup>)": "9.76", "Deviatory Stress, P/A (kN/m<sup>2</sup>)": "315.02", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "176.58", "Pore Water Pressure Parameter": "0.561" }, 
 				{ "Sample Deformation (cm)": "0.726", "Vertical Strain": "0.1007", "Proving Ring Reading": "286", "Piston Load, P (N)": "306.39", "Corrected Area, A (cm<sup>2</sup>)": "9.96", "Deviatory Stress, P/A (kN/m<sup>2</sup>)": "307.62", "Excess Pore Water Pressure (kN/m<sup>2</sup>)": "160.88", "Pore Water Pressure Parameter": "0.523" }, 
 			],
-			"graphs": [["Vertical Strain", "Deviatory Stress, P/A (N/m<sup>2</sup>)", "Axial Strain (%)", "Deviatory Stress, P/A (N/m<sup>2</sup>)", 100, 1], ["Vertical Strain", "Excess Pore Water Pressure (kN/m<sup>2</sup>)", "Axial Strain (%)", "Excess Pore Water Pressure (kN/m<sup>2</sup>)", 100, 1], ["Vertical Strain", "Pore Water Pressure Parameter", "Axial Strain (%)", "Pore Water Pressure Parameter", 100, 1]]
+			"graphs": [["Vertical Strain", "Deviatory Stress, P/A (kN/m<sup>2</sup>)", "Axial Strain (%)", "Deviatory Stress, P/A (kN/m<sup>2</sup>)", 100, 1], ["Vertical Strain", "Excess Pore Water Pressure (kN/m<sup>2</sup>)", "Axial Strain (%)", "Excess Pore Water Pressure (kN/m<sup>2</sup>)", 100, 1], ["Vertical Strain", "Pore Water Pressure Parameter", "Axial Strain (%)", "Pore Water Pressure Parameter", 100, 1]]
 		}
 	};
 
-	let testType = "UU", diameter, area;
+	let testType = "UU";
 	let step, translate, lim, objs, keys, enabled, small, arrows, flag;
 	init();
 
