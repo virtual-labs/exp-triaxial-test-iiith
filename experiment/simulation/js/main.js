@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	const border = data.colors.black, lineWidth = 3, fps = 150;
 	const msgs = [
-		"Click on 'Axial Loading Device' in the apparatus menu to add a loading device to the workspace.", 
+		"Select the type of test to be conducted from the dropdown menu. Click on 'Axial Loading Device' in the apparatus menu to add a loading device to the workspace.", 
 		"Click on 'Soil Sample' in the apparatus menu to add a soil sample to the device base with porous stones on the top and bottom.",
 		"Click on 'Membrane' in the apparatus menu to add a membrane around the soil sample.", 
 		"Click on 'Cylindrical Chamber' in the apparatus menu to enclose the sample in a cylindrical cell.",

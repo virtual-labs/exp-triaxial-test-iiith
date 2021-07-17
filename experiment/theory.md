@@ -4,7 +4,13 @@ Generally 1.4” diameter (3” tall) or 2.8” diameter (6” tall) specimen is
 
 Depending on the nature of loading and drainage condition, triaxial tests are conducted in three different ways.
 1. UU Triaxial test
+   	
+	For the UU test, the specimens (assumed to be saturated prior to test) are subjected to a confining fluid pressure in a triaxial chamber."
 2. CU Triaxial test
+	
+	In a 'consolidated undrained' test the sample is not allowed to drain. The shear characteristics are measured under undrained conditions and the sample is assumed to be fully saturated. Measuring the pore pressures in the sample (sometimes called CUpp) allows approximating the consolidated-drained strength.",
 3. CD Triaxial test
+	
+	In a 'consolidated drained' test, the sample is consolidated and sheared in compression slowly to allow the pore pressures built up by the shearing to dissipate. The rate of axial deformation is kept constant, i.e, strain is controlled. The idea is that the test allows the sample and the pore pressures to fully consolidate (i.e, adjust) to the surrounding stresses. The test may take a long time to allow the sample to adjust, in particular low permeability samples need a long time to drain and adjust strain to stress levels.",
 
-UU triaxial test gives shear strength of soil at different confining stresses. Shear strength is important in all types of geotechnical designs and analyses.
+The triaxial test gives shear strength of soil at different confining stresses. Shear strength is important in all types of geotechnical designs and analyses.
