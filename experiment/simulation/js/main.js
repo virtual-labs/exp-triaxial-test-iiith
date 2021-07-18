@@ -6,19 +6,25 @@ document.addEventListener('DOMContentLoaded', function() {
 	const restartButton = document.getElementById('restart');
 	const instrMsg = document.getElementById('procedure-message');
 
-	menu.addEventListener('change', function() { window.clearTimeout(tmHandle); graphClear(testData[testType].graphs); testType = menu.value; restart(); });
+	menu.addEventListener('change', function() { 
+		window.clearTimeout(tmHandle); 
+		graphClear(testData[testType].graphs); 
+		testType = menu.value; 
+		restart(); 
+	});
 	restartButton.addEventListener('click', restart);
 
 	function graphClear(graphs) {
 		graphs.forEach((graph, ix) => {
-			document.getElementById('plot' + String(ix)).innerHTML = '';
+			const plotId = `plot${ix}`;
+			document.getElementById(plotId).innerHTML = '';
 		});
 	};
 
 	function finish(step) {
-		if(!flag && step === enabled.length - 1)
+		if(!finFlag && step === enabled.length - 1)
 		{
-			flag = true;
+			finFlag = true;
 
 			logic(testData[testType].tableData, testData[testType].graphs);
 			generateTableHead(table, Object.keys(testData[testType].tableData[0]));
@@ -45,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				xVals.push(row[graph[0]] * graph[4]);
 				yVals.push(row[graph[1]] * graph[5]);
 			});
-			drawGraph([trace(xVals, yVals, 'Graph')], [graph[2], graph[3]], 'plot' + String(index));
+			drawGraph([trace(xVals, yVals, 'Graph')], [graph[2], graph[3]], `plot${index}`);
 		});
 	};
 
@@ -360,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		translate = [0, 0];
 		lim = [-1, -1];
 		arrows = false;
-		flag = false;
+		finFlag = false;
 	};
 
 	function restart() 
@@ -532,7 +538,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	};
 
 	let testType = "UU";
-	let step, translate, lim, objs, keys, enabled, small, arrows, flag;
+	let step, translate, lim, objs, keys, enabled, small, arrows, finFlag;
 	init();
 
 	const objNames = Object.keys(objs);
@@ -638,10 +644,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 
 		testData[testType].outputs.forEach((observation, idx) => {
-			document.getElementById("output" + String(idx + 1)).innerHTML = observation.LHS + "____" + observation.unit;
+			document.getElementById(`output${idx + 1}`).innerHTML = observation.LHS + "____" + observation.unit;
 			if(step >= observation.step)
 			{
-				document.getElementById("output" + String(idx + 1)).innerHTML = observation.LHS + observation.value + observation.unit;
+				document.getElementById(`output${idx + 1}`).innerHTML = observation.LHS + observation.value + observation.unit;
 			}
 		});
 

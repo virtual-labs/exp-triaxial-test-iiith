@@ -10,10 +10,7 @@
 				"d": "60 kN/m<sup>2</sup>"
 			},
 			"explanations": {
-				"a": "In consolidated and drained conditions pore pressure is zero.",
-				"b": "In consolidated and drained conditions pore pressure is zero.",
-				"c": "In consolidated and drained conditions pore pressure is zero.",
-				"d": "In consolidated and drained conditions pore pressure is zero."
+				"a": "In consolidated and drained conditions pore pressure is zero."
 			},
 			"difficulty": "advanced",
 			"correctAnswer": "a"
