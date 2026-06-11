@@ -1,36 +1,158 @@
 {
-	"version": 2.0,
-	"questions": [
-		{
-			"question": "1. A clay soil sample is tested in a triaxial apparatus in consolidated drained conditions at a cell pressure of 100 kN/m<sup>2</sup>. What will be the pore water pressure at a deviator stress of 40 kN/m<sup>2</sup>? ",
-			"answers": {
-				"a": "0 kN/m<sup>2</sup>",
-				"b": "20 kN/m<sup>2</sup>",
-				"c": "40 kN/m<sup>2</sup>",
-				"d": "60 kN/m<sup>2</sup>"
-			},
-			"explanations": {
-				"a": "In consolidated and drained conditions pore pressure is zero."
-			},
-			"difficulty": "advanced",
-			"correctAnswer": "a"
-		},
-		{
-			"question": "2. A conventional drained triaxial compression test was conducted on a normally consolidated clay sample under an effective confining pressure (σ<sub>3</sub>) of 200 kPa. The deviator stress (σ<sub>d</sub>) at failure was found to be 400 kPa. An identical specimen of the same clay sample is isotropically consolidated to a confining pressure (σ<sub>3</sub>) of 200 kPa and subjected to standard undrained triaxial compression test. If the deviator stress at failure (σ<sub>d</sub>') is 150 kPa, the pore pressure developed in kPa is ____.",
-			"answers": {
-				"a": "0",
-				"b": "1",
-				"c": "1.25",
-				"d": "1.5"
-			},
-			"explanations": {
-				"a": "In both consolidated drained (CD) test as well as consolidated undrained (CU) test, c = 0. We first obtain σ<sub>1</sub> as σ<sub>d</sub> + σ<sub>3</sub>. Then we obtain Φ from the formula: σ<sub>1</sub> = σ<sub>3</sub> * tan<sup>2</sup> (45 + Φ / 2) + 2 * c * tan (45 + Φ / 2). Next we obtain the pore pressure U by substituting σ<sub>1</sub>' = σ<sub>3</sub> + σ<sub>d</sub>' - U and σ<sub>3</sub>' = σ<sub>3</sub> - U in the formula: σ<sub>1</sub>' = σ<sub>3</sub>' * tan<sup>2</sup> (45 + Φ / 2) + 2 * c * tan (45 + Φ / 2).",
-				"b": "In both consolidated drained (CD) test as well as consolidated undrained (CU) test, c = 0. We first obtain σ<sub>1</sub> as σ<sub>d</sub> + σ<sub>3</sub>. Then we obtain Φ from the formula: σ<sub>1</sub> = σ<sub>3</sub> * tan<sup>2</sup> (45 + Φ / 2) + 2 * c * tan (45 + Φ / 2). Next we obtain the pore pressure U by substituting σ<sub>1</sub>' = σ<sub>3</sub> + σ<sub>d</sub>' - U and σ<sub>3</sub>' = σ<sub>3</sub> - U in the formula: σ<sub>1</sub>' = σ<sub>3</sub>' * tan<sup>2</sup> (45 + Φ / 2) + 2 * c * tan (45 + Φ / 2).",
-				"c": "In both consolidated drained (CD) test as well as consolidated undrained (CU) test, c = 0. We first obtain σ<sub>1</sub> as σ<sub>d</sub> + σ<sub>3</sub>. Then we obtain Φ from the formula: σ<sub>1</sub> = σ<sub>3</sub> * tan<sup>2</sup> (45 + Φ / 2) + 2 * c * tan (45 + Φ / 2). Next we obtain the pore pressure U by substituting σ<sub>1</sub>' = σ<sub>3</sub> + σ<sub>d</sub>' - U and σ<sub>3</sub>' = σ<sub>3</sub> - U in the formula: σ<sub>1</sub>' = σ<sub>3</sub>' * tan<sup>2</sup> (45 + Φ / 2) + 2 * c * tan (45 + Φ / 2).",
-				"d": "In both consolidated drained (CD) test as well as consolidated undrained (CU) test, c = 0. We first obtain σ<sub>1</sub> as σ<sub>d</sub> + σ<sub>3</sub>. Then we obtain Φ from the formula: σ<sub>1</sub> = σ<sub>3</sub> * tan<sup>2</sup> (45 + Φ / 2) + 2 * c * tan (45 + Φ / 2). Next we obtain the pore pressure U by substituting σ<sub>1</sub>' = σ<sub>3</sub> + σ<sub>d</sub>' - U and σ<sub>3</sub>' = σ<sub>3</sub> - U in the formula: σ<sub>1</sub>' = σ<sub>3</sub>' * tan<sup>2</sup> (45 + Φ / 2) + 2 * c * tan (45 + Φ / 2)."
-			},
-			"difficulty": "advanced",
-			"correctAnswer": "c"
-		}
-	]
+  "version": 2.0,
+  "questions": [
+    {
+      "question": "1. In a triaxial test, the stress that acts equally in all directions before the deviator stress is applied is called:",
+      "answers": {
+        "a": "Shear stress",
+        "b": "Confining pressure",
+        "c": "Effective stress",
+        "d": "Pore pressure"
+      },
+      "explanations": {
+        "a": "Incorrect. Shear stress is only generated when the axial load is increased beyond the confining pressure.",
+        "b": "Correct. The confining pressure (or cell pressure) is applied isotropically to the specimen at the beginning of the test.",
+        "c": "Incorrect. Effective stress is the total stress minus the pore pressure, not the name of the applied pressure.",
+        "d": "Incorrect. Pore pressure is the pressure of the fluid within the voids, which might increase due to the confining pressure."
+      },
+      "difficulty": "beginner",
+      "correctAnswer": "b"
+    },
+    {
+      "question": "2. The rubber membrane used in a triaxial test serves what primary purpose?",
+      "answers": {
+        "a": "To provide structural strength to the soil",
+        "b": "To prevent the soil from drying out",
+        "c": "To separate the soil specimen from the cell fluid",
+        "d": "To measure the lateral strain"
+      },
+      "explanations": {
+        "a": "Incorrect. The membrane is flexible and provides negligible strength compared to the soil.",
+        "b": "Incorrect. While it prevents drying, its main role is related to the pressure application.",
+        "c": "Correct. The membrane acts as an impermeable barrier that allows the cell fluid to apply pressure to the soil without entering its pores.",
+        "d": "Incorrect. Lateral strain is usually measured by volume change or separate sensors, not the membrane itself."
+      },
+      "difficulty": "beginner",
+      "correctAnswer": "c"
+    },
+    {
+      "question": "3. A 'Drained' triaxial test implies that:",
+      "answers": {
+        "a": "The soil is dry",
+        "b": "Water is allowed to flow out of the specimen during the test",
+        "c": "Pore pressure is allowed to build up",
+        "d": "The test is performed very quickly"
+      },
+      "explanations": {
+        "a": "Incorrect. Drained tests are typically performed on saturated soils.",
+        "b": "Correct. In a drained test, the drainage valves are kept open, allowing pore water to escape so that no excess pore water pressure develops during loading.",
+        "c": "Incorrect. The purpose of a drained test is to prevent pore pressure buildup.",
+        "d": "Incorrect. Drained tests must be performed slowly to ensure pore pressure dissipation."
+      },
+      "difficulty": "beginner",
+      "correctAnswer": "b"
+    },
+    {
+      "question": "4. The 'critical state' of a soil in a triaxial test is reached when:",
+      "answers": {
+        "a": "The soil first begins to shear",
+        "b": "The pore pressure reaches its maximum",
+        "c": "The soil continues to deform at constant stress and constant volume",
+        "d": "The sample explodes"
+      },
+      "explanations": {
+        "a": "Incorrect. This is the start of the plastic deformation phase.",
+        "b": "Incorrect. Pore pressure might continue to change after its peak.",
+        "c": "Correct. At the critical state, the soil undergoes large shear strains without any further change in stress or volume (for drained) or pore pressure (for undrained).",
+        "d": "Incorrect. Soil specimens in triaxial tests fail by shearing or bulging, not explosion."
+      },
+      "difficulty": "intermediate",
+      "correctAnswer": "c"
+    },
+    {
+      "question": "5. Which pore pressure parameter 'A' is characteristic of a normally consolidated clay at failure?",
+      "answers": {
+        "a": "A < 0",
+        "b": "A = 0",
+        "c": "0.5 < A < 1.0",
+        "d": "A > 1.5"
+      },
+      "explanations": {
+        "a": "Incorrect. Negative A values are typical of heavily over-consolidated clays or dense sands.",
+        "b": "Incorrect. A = 0 would mean no pore pressure change due to deviator stress.",
+        "c": "Correct. Normally consolidated clays typically have A values at failure between 0.5 and 1.0, indicating significant pore pressure buildup.",
+        "d": "Incorrect. Values greater than 1.5 are extremely rare and indicate very sensitive or collapsible structures."
+      },
+      "difficulty": "intermediate",
+      "correctAnswer": "c"
+    },
+    {
+      "question": "6. The pole (or origin of planes) on a Mohr circle is used to find:",
+      "answers": {
+        "a": "The radius of the circle",
+        "b": "The stresses on a plane at any given inclination",
+        "c": "The maximum shear stress",
+        "d": "The cohesion of the soil"
+      },
+      "explanations": {
+        "a": "Incorrect. The radius is found from the principal stresses.",
+        "b": "Correct. The pole is a unique point on the Mohr circle; a line drawn from the pole parallel to a physical plane will intersect the circle at the stress coordinates for that plane.",
+        "c": "Incorrect. The maximum shear stress is the highest point on the circle.",
+        "d": "Incorrect. Cohesion is determined from the failure envelope, not the pole."
+      },
+      "difficulty": "intermediate",
+      "correctAnswer": "b"
+    },
+    {
+      "question": "7. A clay soil sample is tested in a triaxial apparatus in consolidated drained (CD) conditions at a cell pressure of 100 kN/m². What will be the excess pore water pressure at a deviator stress of 40 kN/m²?",
+      "answers": {
+        "a": "0 kN/m²",
+        "b": "20 kN/m²",
+        "c": "40 kN/m²",
+        "d": "60 kN/m²"
+      },
+      "explanations": {
+        "a": "Correct. By definition, in a 'Drained' test, the excess pore water pressure is allowed to dissipate completely, so it remains zero throughout the test.",
+        "b": "Incorrect. Any value other than zero would imply the test is undrained or partially drained.",
+        "c": "Incorrect. This would be the case in an undrained test with A=1.",
+        "d": "Incorrect. Pore pressure in a CD test does not increase with the deviator stress."
+      },
+      "difficulty": "advanced",
+      "correctAnswer": "a"
+    },
+    {
+      "question": "8. A conventional drained triaxial compression test on a normally consolidated clay (c=0) has σ3 = 200 kPa and σd = 400 kPa at failure. Determine the effective friction angle (φ').",
+      "answers": {
+        "a": "19.5 degrees",
+        "b": "30.0 degrees",
+        "c": "36.9 degrees",
+        "d": "45.0 degrees"
+      },
+      "explanations": {
+        "a": "Incorrect. Re-calculate using the formula sin(φ') = (σ1 - σ3) / (σ1 + σ3).",
+        "b": "Correct. σ1 = σ3 + σd = 200 + 400 = 600 kPa. sin(φ') = (σ1 - σ3) / (σ1 + σ3) = (600 - 200) / (600 + 200) = 400 / 800 = 0.5. φ' = arcsin(0.5) = 30 degrees.",
+        "c": "Incorrect. This would be the result if σd were different.",
+        "d": "Incorrect. A 45-degree friction angle would imply an infinite σ1 for a given σ3."
+      },
+      "difficulty": "advanced",
+      "correctAnswer": "b"
+    },
+    {
+      "question": "9. In a CU test, the deviator stress at failure was 150 kPa with σ3 = 200 kPa. If the pore pressure at failure was 50 kPa, the effective minor principal stress (σ3') is:",
+      "answers": {
+        "a": "250 kPa",
+        "b": "150 kPa",
+        "c": "100 kPa",
+        "d": "200 kPa"
+      },
+      "explanations": {
+        "a": "Incorrect. Effective stress is total stress minus pore pressure, not plus.",
+        "b": "Correct. Effective minor principal stress σ3' = Total minor principal stress (σ3) - Pore pressure (u) = 200 - 50 = 150 kPa.",
+        "c": "Incorrect. This might be a subtraction error or confusion with the deviator stress.",
+        "d": "Incorrect. This is the total stress, not the effective stress."
+      },
+      "difficulty": "advanced",
+      "correctAnswer": "b"
+    }
+  ]
 }

@@ -1,1 +1,1 @@
-To find the shear of the soil by Undrained Triaxial Test.
+To determine the shear strength characteristics of a soil sample using the undrained triaxial test.
